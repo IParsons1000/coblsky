@@ -13,7 +13,8 @@
 		
 		05 SOCK-FD              PIC S9(5) COMP-5. *> int
 		
-	01 NETWORK-REQUEST.
-	    05 REQUEST-LEN          PIC 9(5) COMP-5.  *> int
-		05 REQUEST-DATA OCCURS 1 to 65536 TIMES
-		  DEPENDING ON REQUEST-LEN PIC X.         *> char[65536]
+	01 NETWORK-PACKET.
+	    05 CONN-FD              PIC S9(5) COMP-5. *> int
+	    05 PACKET-LEN           PIC 9(5)  COMP-5. *> int
+		05 PACKET-DATA OCCURS 1 to 65536 TIMES
+		  DEPENDING ON PACKET-LEN PIC X.          *> char[65536]
