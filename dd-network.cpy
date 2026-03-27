@@ -16,5 +16,4 @@
 	01 NETWORK-PACKET.
 	    05 CONN-FD              PIC S9(5) COMP-5. *> int
 	    05 PACKET-LEN           PIC 9(5)  COMP-5. *> int
-		05 PACKET-DATA OCCURS 1 to 65536 TIMES
-		  DEPENDING ON PACKET-LEN PIC X.          *> char[65536]
+		05 PACKET-DATA          PIC X(65536).     *> char[65536]
