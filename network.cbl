@@ -3,6 +3,12 @@
 *> network.cbl - networking routines
 *>
 
+*>***************************************************************************
+*>* NETWORK-INIT
+*>*  - Perform networking-specific initialization tasks
+*>*  - Create OpenSSL context
+*>***************************************************************************
+
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-INIT.
 
@@ -71,6 +77,11 @@ INIT-TLS-ERR.
 >>CALL-CONVENTION COBOL
 
 END PROGRAM NETWORK-INIT.
+
+*>***************************************************************************
+*>* NETWORK-OPEN
+*>*  - Create socket
+*>***************************************************************************
 
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-OPEN.
@@ -152,6 +163,12 @@ PROCEDURE DIVISION USING NETWORK-SOCKET.
 	
 END PROGRAM NETWORK-OPEN.
 
+*>***************************************************************************
+*>* NETWORK-CONNECT
+*>*  - Accept a new connection on a given socket
+*>*  - Perform TLS handshake if required
+*>***************************************************************************
+
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-CONNECT.
 
@@ -226,6 +243,11 @@ CONNECT-TLS-ERR.
 
 END PROGRAM NETWORK-CONNECT.
 
+*>***************************************************************************
+*>* NETWORK-RECEIVE
+*>*  - Read packet from connection
+*>***************************************************************************
+
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-RECEIVE.
 
@@ -253,6 +275,11 @@ PROCEDURE DIVISION USING NETWORK-SSL-CONTEXT, NETWORK-CONNECTION, NETWORK-PACKET
 
 END PROGRAM NETWORK-RECEIVE.
 
+*>***************************************************************************
+*>* NETWORK-SEND
+*>*  - Write packet to socket
+*>***************************************************************************
+
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-SEND.
 
@@ -279,6 +306,12 @@ PROCEDURE DIVISION USING NETWORK-SSL-CONTEXT, NETWORK-CONNECTION, NETWORK-PACKET
 
 END PROGRAM NETWORK-SEND.
 
+*>***************************************************************************
+*>* NETWORK-DISCONNECT
+*>*  - Close connection
+*>*  - Free OpenSSL structures associated with socket
+*>***************************************************************************
+
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-DISCONNECT.
 
@@ -296,10 +329,10 @@ LINKAGE SECTION.
 
     COPY dd-network.
 
-PROCEDURE DIVISION USING NETWORK-SSL-CONTEXT, NETWORK-CONNECTION.
+PROCEDURE DIVISION USING NETWORK-CONNECTION.
 
     *> disconnect tls
-	IF (NETWORK-SSL-CONTEXT NOT EQUALS 0) AND (CONN-SSL NOT EQUALS 0) THEN
+	IF CONN-SSL NOT EQUALS 0 THEN
 	    PERFORM DISCONNECT-TLS.
 
     *> close connection
@@ -324,11 +357,7 @@ DISCONNECT-TLS.
     *> free ssl memory structures
     CALL "SSL_free" USING BY VALUE CONN-SSL.
 
-    *> teardown ssl
-    CALL "SSL_CTX_free" USING BY VALUE NETWORK-SSL-CONTEXT.
-
-    *> reset pointers
-	MOVE 0 TO NETWORK-SSL-CONTEXT.
+    *> reset pointer
 	MOVE 0 TO CONN-SSL.
 
     EXIT PARAGRAPH.
@@ -346,6 +375,11 @@ DISCONNECT-TLS-ERR.
 >>CALL-CONVENTION COBOL
 
 END PROGRAM NETWORK-DISCONNECT.
+
+*>***************************************************************************
+*>* NETWORK-CLOSE
+*>*  - Close socket
+*>***************************************************************************
 
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-CLOSE.
@@ -373,13 +407,33 @@ PROCEDURE DIVISION USING NETWORK-SOCKET.
 
 END PROGRAM NETWORK-CLOSE.
 
+*>***************************************************************************
+*>* NETWORK-FINI
+*>*  - Network-specific shutdown tasks
+*>*  - Free OpenSSL context
+*>***************************************************************************
+
 IDENTIFICATION DIVISION.
 PROGRAM-ID. NETWORK-FINI.
 
 DATA DIVISION.
 
-PROCEDURE DIVISION.
+LINKAGE SECTION.
+
+    COPY dd-network.
+
+PROCEDURE DIVISION USING NETWORK-SSL-CONTEXT.
+
+    PERFORM FINI-TLS.
 
     GOBACK.
+
+>>CALL-CONVENTION C
+FINI-TLS.
+    *> teardown ssl
+    CALL "SSL_CTX_free" USING BY VALUE NETWORK-SSL-CONTEXT.
+
+    EXIT PARAGRAPH.
+>>CALL-CONVENTION COBOL
 
 END PROGRAM NETWORK-FINI.
