@@ -24,7 +24,7 @@ KEYLEN ?= 2048
 all: coblsky
 
 coblsky:
-	$(CBLC) $(CBLFLAGS) -o coblsky -main coblsky.cbl network.cbl $(LDFLAGS)
+	$(CBLC) $(CBLFLAGS) -o coblsky -main coblsky.cbl network.cbl http.cbl string.cbl $(LDFLAGS)
 
 keygen:
 	openssl genrsa -out $(KEYFILE) $(KEYLEN)
