@@ -410,6 +410,7 @@ DISCONNECT-TLS.
 	END-PERFORM.
 
 	IF I IS LESS THAN 0 THEN
+	    *> will sometimes trigger with errno == 0 when client misbehaves
 	    PERFORM DISCONNECT-TLS-ERR.
 
     *> free ssl memory structures

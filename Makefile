@@ -6,7 +6,7 @@
 CBLC ?= gcobol
 
 CBLFLAGS ?=
-CBLFLAGS += -g -O2
+CBLFLAGS += -g -O3
 CBLFLAGS += -dialect ibm
 
 LDFLAGS ?=
