@@ -12,6 +12,8 @@ CBLFLAGS += -dialect ibm
 LDFLAGS ?=
 LDFLAGS += -lssl -lcrypto
 
+SRC := coblsky.cbl network.cbl http.cbl string.cbl xrpc.cbl
+
 RM ?= rm -rf
 
 CRTFILE ?= server.crt
@@ -24,7 +26,7 @@ KEYLEN ?= 2048
 all: coblsky
 
 coblsky:
-	$(CBLC) $(CBLFLAGS) -o coblsky -main coblsky.cbl network.cbl http.cbl string.cbl $(LDFLAGS)
+	$(CBLC) $(CBLFLAGS) -o coblsky -main $(SRC) $(LDFLAGS)
 
 keygen:
 	openssl genrsa -out $(KEYFILE) $(KEYLEN)
