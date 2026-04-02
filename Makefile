@@ -8,11 +8,13 @@ CBLC ?= gcobol
 CBLFLAGS ?=
 CBLFLAGS += -g -O3
 CBLFLAGS += -dialect ibm
+CBLFLAGS += -I.
 
 LDFLAGS ?=
 LDFLAGS += -lssl -lcrypto
 
-SRC := coblsky.cbl network.cbl http.cbl string.cbl xrpc.cbl
+SRC := coblsky.cbl network.cbl http.cbl string.cbl xrpc.cbl \
+       com/proto/at/com-proto-at-test.cbl
 
 RM ?= rm -rf
 
