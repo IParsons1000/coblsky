@@ -1,6 +1,6 @@
 *>
 *> (c)2026 Ira Parsons
-*> com-proto-at-test.cbl - com.proto.at.test lexicon handler
+*> test.cbl - com.proto.at.test lexicon handler
 *>
 
 *>***************************************************************************
