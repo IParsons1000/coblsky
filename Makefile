@@ -3,17 +3,29 @@
 # coblsky makefile
 #
 
+PROGRAM ?= coblsky
+
 USE_CJSON := 1
 
-CBLC ?= gcobol
+#CBLC ?= gcobol
+CBLC ?= cobc
 
 CBLFLAGS ?=
 CBLFLAGS += -g -O3
-CBLFLAGS += -dialect ibm
 CBLFLAGS += -I.
+CBLFLAGS += -o $(PROGRAM)
 
 ifeq ($(USE_CJSON),1)
 CBLFLAGS += -DUSE_CJSON=1
+endif
+
+ifeq ($(CBLC),gcobol)
+CBLFLAGS += -dialect ibm
+CBLFLAGS += -DSTDCALL=C
+CBLFLAGS += -main
+else ifeq ($(CBLC),cobc)
+CBLFLAGS += -std=ibm -F
+CBLFLAGS += -x -e COBLSKY
 endif
 
 LDFLAGS ?=
@@ -42,14 +54,14 @@ KEYLEN ?= 2048
 all: coblsky
 
 coblsky:
-	$(CBLC) $(CBLFLAGS) -o coblsky -main $(SRC) $(LDFLAGS)
+	$(CBLC) $(CBLFLAGS) $(SRC) $(LDFLAGS)
 
 keygen:
 	openssl genrsa -out $(KEYFILE) $(KEYLEN)
 	openssl req -new -x509 -key $(KEYFILE) -out $(CRTFILE) -days 365 -subj "/C=US/ST=Test/L=Local/O=DevOrg/OU=Dev/CN=localhost"
 
 clean:
-	$(RM) coblsky *.o
+	$(RM) coblsky *.o *.i *.c *.h
 
 spotless: clean
 	$(RM) $(CRTFILE) $(KEYFILE)
