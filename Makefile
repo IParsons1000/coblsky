@@ -5,10 +5,10 @@
 
 PROGRAM ?= coblsky
 
-USE_CJSON := 1
+CBLC ?= gcobol
+#CBLC ?= cobc
 
-#CBLC ?= gcobol
-CBLC ?= cobc
+USE_CJSON := 1
 
 CBLFLAGS ?=
 CBLFLAGS += -g -O3
@@ -20,12 +20,13 @@ CBLFLAGS += -DUSE_CJSON=1
 endif
 
 ifeq ($(CBLC),gcobol)
+CBLFLAGS += -DGCOBOL
 CBLFLAGS += -dialect ibm
-CBLFLAGS += -DSTDCALL=C
 CBLFLAGS += -main
 else ifeq ($(CBLC),cobc)
+CBLFLGAS += -DCOBC
 CBLFLAGS += -std=ibm -F
-CBLFLAGS += -x -e COBLSKY
+CBLFLAGS += -vvv -x -e COBLSKY
 endif
 
 LDFLAGS ?=
