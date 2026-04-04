@@ -3,6 +3,8 @@
 # coblsky makefile
 #
 
+USE_CJSON := 1
+
 CBLC ?= gcobol
 
 CBLFLAGS ?=
@@ -10,11 +12,23 @@ CBLFLAGS += -g -O3
 CBLFLAGS += -dialect ibm
 CBLFLAGS += -I.
 
+ifeq ($(USE_CJSON),1)
+CBLFLAGS += -DUSE_CJSON=1
+endif
+
 LDFLAGS ?=
 LDFLAGS += -lssl -lcrypto
 
+ifeq ($(USE_CJSON),1)
+LDFLAGS += -lcjson
+endif
+
 SRC := coblsky.cbl network.cbl http.cbl string.cbl xrpc.cbl \
-       com/proto/at/com-proto-at-test.cbl
+       com/proto/at/test.cbl
+
+ifeq ($(USE_CJSON),1)
+SRC += cjson.cbl
+endif
 
 RM ?= rm -rf
 
