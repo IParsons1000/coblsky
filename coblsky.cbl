@@ -30,7 +30,7 @@ PROCEDURE DIVISION.
         *> handle request
 		IF CONN-FD NOT EQUAL -1 THEN
 		    PERFORM HANDLE-CLIENT
-		   
+
 	END-PERFORM.
 
     *> network teardown
