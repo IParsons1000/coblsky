@@ -64,7 +64,7 @@ keygen:
 db2:
 	docker run -itd --name db2 \
 	  --restart unless-stopped \
-	  -e DBNAME=testdb \
+	  -e DBNAME=coblskydb \
 	  -v ./database:/database \
 	  -e DB2INST1_PASSWORD=db2password \
 	  -e LICENSE=accept \
