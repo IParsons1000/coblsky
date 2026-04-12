@@ -65,8 +65,12 @@ keygen:
 	openssl genrsa -out $(KEYFILE) $(KEYLEN)
 	openssl req -new -x509 -key $(KEYFILE) -out $(CRTFILE) -days 365 -subj "/C=US/ST=Test/L=Local/O=DevOrg/OU=Dev/CN=localhost"
 
-docker:
+docker: docker-build docker-run
+
+docker-build:
 	sudo docker build -t $(PROGRAM) .
+
+docker-run:	
 	sudo docker run -itd \
 	  --name $(PROGRAM) \
 	  --restart unless-stopped \
@@ -74,14 +78,16 @@ docker:
 	  --publish 8443:8443 \
 	  --privileged=true \
 	  $(PROGRAM)
+	sudo docker cp $(PROGRAM):/src/server.crt .
+
+docker-clean:
+	-sudo docker stop $(PROGRAM)
+	-sudo docker rm -f $(PROGRAM)
 
 clean:
 	$(RM) -rf coblsky *.o *.i *.c *.h *.so
 
-spotless: clean
+spotless: clean docker-clean
 	$(RM) -rf $(CRTFILE) $(KEYFILE) database
-	sudo docker stop $(PROGRAM)
-	sudo docker rm $(PROGRAM)
-	
 
 remake: clean all
