@@ -66,14 +66,12 @@ keygen:
 	openssl req -new -x509 -key $(KEYFILE) -out $(CRTFILE) -days 365 -subj "/C=US/ST=Test/L=Local/O=DevOrg/OU=Dev/CN=localhost"
 
 docker:
-	sudo docker build -t $(PROGRAM) \
-	  --env-file=docker.env \
-	  .
+	sudo docker build -t $(PROGRAM) .
 	sudo docker run -itd \
-	  --name $(PROGRAM)
+	  --name $(PROGRAM) \
 	  --restart unless-stopped \
 	  --env-file=docker.env \
-	  --publish 8443:8443
+	  --publish 8443:8443 \
 	  --privileged=true \
 	  $(PROGRAM)
 
