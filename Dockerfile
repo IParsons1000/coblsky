@@ -57,4 +57,4 @@ RUN yum install -y openssl3-devel cjson-devel
 WORKDIR /src
 COPY --from=build /src .
 
-ENTRYPOINT ./coblsky
+ENTRYPOINT ./coblsky &>/var/log/coblsky.log
