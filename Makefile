@@ -9,6 +9,7 @@ CBLC ?= gcobol
 #CBLC ?= cobc
 
 USE_CJSON := 1
+USE_DB2 := 1
 
 CBLFLAGS ?=
 CBLFLAGS += -g -O3
@@ -34,6 +35,11 @@ LDFLAGS += -lssl -lcrypto
 
 ifeq ($(USE_CJSON),1)
 LDFLAGS += -lcjson
+endif
+
+ifeq ($(USE_DB2),1)
+LDFLAGS += -L/opt/ibm/db2/V11.5/lib64
+LDFLAGS += -lcrypt -ldb2
 endif
 
 ifeq ($(CBLC),gcobol)
@@ -73,7 +79,6 @@ docker-build:
 docker-run:	
 	docker run -itd \
 	  --name $(PROGRAM) \
-	  --restart unless-stopped \
 	  --env-file=docker.env \
 	  --publish 8443:8443 \
 	  --privileged=true \

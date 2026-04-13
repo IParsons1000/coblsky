@@ -9,7 +9,7 @@ FROM fedora:43 AS build
 
 # update system software
 RUN yum clean all
-RUN yum install -y libstdc++-15.2.1-7.fc43
+RUN yum install -y libstdc++-15.2.1-7.fc43 libxcrypt-compat
 RUN yum update -y glibc-2.42
 
 # install needed build packages
@@ -57,4 +57,8 @@ RUN yum install -y openssl3-devel cjson-devel
 WORKDIR /src
 COPY --from=build /src .
 
-ENTRYPOINT ./coblsky &>/var/log/coblsky.log
+# add db2 libs to ld search path
+RUN echo '/opt/ibm/db2/V11.5/lib64' >> /etc/ld.so.conf
+RUN ldconfig
+
+ENTRYPOINT ./coblsky &>/var/log/coblsky.log ; bash
