@@ -68,19 +68,21 @@ keygen:
 docker: docker-clean docker-build docker-run
 
 docker-build:
+	docker build -t $(PROGRAM) .
 
 docker-run:	
+	docker run -itd \
 	  --name $(PROGRAM) \
 	  --restart unless-stopped \
 	  --env-file=docker.env \
 	  --publish 8443:8443 \
 	  --privileged=true \
 	  $(PROGRAM)
+	docker cp $(PROGRAM):/src/server.crt .
 
 docker-clean:
-	-sudo docker stop $(PROGRAM)
-	-sudo docker rm -f $(PROGRAM)
 	-docker stop $(PROGRAM)
+	-docker rm -f $(PROGRAM)
 
 clean:
 	$(RM) -rf coblsky *.o *.i *.c *.h *.so
