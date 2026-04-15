@@ -61,4 +61,4 @@ COPY --from=build /src .
 RUN echo '/opt/ibm/db2/V11.5/lib64' >> /etc/ld.so.conf
 RUN ldconfig
 
-ENTRYPOINT ./coblsky &>/var/log/coblsky.log ; bash
+ENTRYPOINT ./launch.sh
