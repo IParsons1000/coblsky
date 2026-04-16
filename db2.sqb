@@ -1,0 +1,21 @@
+*>
+*> (c)2026 Ira Parsons
+*> db2.sqb - db2 database routines
+*>
+
+*>***************************************************************************
+*>* DB2-CONNECT
+*>*  - Connect to DB2 database
+*>***************************************************************************
+
+IDENTIFICATION DIVISION.
+PROGRAM-ID. DB2-CONNECT.
+
+DATA DIVISION.
+LINKAGE SECTION.
+
+PROCEDURE DIVISION.
+
+    GOBACK.
+
+END PROGRAM DB2-CONNECT.

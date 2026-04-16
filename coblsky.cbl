@@ -17,6 +17,7 @@ PROCEDURE DIVISION.
 
     *> initialize submodules
     CALL "NETWORK-INIT" USING NETWORK-SSL-CONTEXT.
+    CALL "DB2-CONNECT".
 
     *> network setup
     PERFORM SETUP-HTTPS-SOCKET.

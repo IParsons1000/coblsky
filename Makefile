@@ -23,6 +23,7 @@ endif
 ifeq ($(CBLC),gcobol)
 CBLFLAGS += -DGCOBOL
 CBLFLAGS += -dialect ibm
+CBLFLAGS += -x cobol
 CBLFLAGS += -main
 else ifeq ($(CBLC),cobc)
 CBLFLGAS += -DCOBC
@@ -51,6 +52,10 @@ SRC := coblsky.cbl network.cbl http.cbl string.cbl xrpc.cbl \
 
 ifeq ($(USE_CJSON),1)
 SRC += cjson.cbl
+endif
+
+ifeq ($(USE_DB2),1)
+SRC += db2.sqb
 endif
 
 RM ?= rm -rf
