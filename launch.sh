@@ -4,4 +4,12 @@
 # launch.sh - coblsky/db2 launch script
 #
 
-./coblsky 2&>1 | tee /var/log/coblsky.log ; bash
+set -e
+
+# start server
+nohup ./coblsky 2&>1 | tee /var/log/coblsky.log
+
+# keep container alive
+if [[ "$DEBUG" = "true" ]]; then
+	while true; do sleep 1000; done
+fi
