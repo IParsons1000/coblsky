@@ -164,7 +164,7 @@ END PROGRAM XRPC-GET-HANDLER.
 
 *>***************************************************************************
 *>* XRPC-THROW-ERROR
-*>*  - Construct error message
+*>*  - Construct error message and place in passed HTTP body container
 *>***************************************************************************
 
 IDENTIFICATION DIVISION.
