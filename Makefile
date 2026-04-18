@@ -10,6 +10,7 @@ CBLC ?= gcobol
 
 USE_CJSON := 1
 USE_DB2 := 1
+USE_SQL_EXEC := 0
 
 CBLFLAGS ?=
 CBLFLAGS += -g -O3
@@ -55,6 +56,8 @@ SRC += cjson.cbl
 endif
 
 ifeq ($(USE_DB2),1)
+SRC += db2.cbl
+else ifeq ($(USE_SQL_EXEC),1)
 SRC += db2.sqb
 endif
 

@@ -1,7 +1,11 @@
 *>
 *> (c)2026 Ira Parsons
-*> db2.sqb - db2 database routines (sql exec version)
+*> db2.sqb - db2 database routines (precompiled version)
 *>
+
+*> this currently consists of the functions that db2 prep would return if
+*>  if it were run on the sql exec version of this file; sql exec support
+*>  is to come
 
 *>***************************************************************************
 *>* DB2-INIT
@@ -16,9 +20,7 @@ WORKING-STORAGE SECTION.
 
     01 I PIC 9(5) COMP-5. *> int
 
-    01 DB2-PASSWORD.
-	    05 DB2-PASSWORD-LEN PIC S9(4) COMP-5 VALUE 11.
-	    05 DB2-PASSWORD-DAT PIC X(12) VALUE z"db2password".
+    01 DB2-PASSWORD PIC X(12) VALUE z"db2password".
 	01 DB2-USERNAME PIC X(9)  VALUE z"db2inst1".
 	01 DB2-INSTNAME PIC X(9)  VALUE z"db2inst1".
 
@@ -32,14 +34,19 @@ PROCEDURE DIVISION USING DB-CONNECTION.
 
     GOBACK.
 
+>>IF GCOBOL IS DEFINED
+>>CALL-CONVENTION C
+>>END-IF
+*>>>IF COBC IS DEFINED
+*>>>CALL-CONVENTION STDCALL
+*>>>END-IF
 INIT-INSTANCE.
 
-    *> attach to coblsky with db2inst1
-	EXEC SQL
-	    CONNECT TO COBLSKY USER :DB2-USERNAME USING :DB2-PASSWORD
-	END-EXEC.
+    *> attach to db2inst1
+	CALL "sqlgatin" USING BY VALUE 11, BY VALUE 8, BY VALUE 8, BY REFERENCE SQLCA, BY REFERENCE DB2-PASSWORD, BY REFERENCE DB2-USERNAME, BY REFERENCE DB2-INSTNAME RETURNING I.
 
     EXIT PARAGRAPH.
+>>CALL-CONVENTION COBOL
 
 END PROGRAM DB2-INIT.
 
@@ -66,13 +73,18 @@ PROCEDURE DIVISION USING DB-CONNECTION.
 
 	GOBACK.
 
+>>IF GCOBOL IS DEFINED
+>>CALL-CONVENTION C
+>>END-IF
+*>>>IF COBC IS DEFINED
+*>>>CALL-CONVENTION STDCALL
+*>>>END-IF
 FINI-INSTANCE.
 
-    *> detach from database
-    EXEC SQL
-	    CONNECT RESET
-	END-EXEC.
+    *> detach from db2inst1
+	CALL "sqlgdtin" USING BY REFERENCE SQLCA RETURNING I.
 
     EXIT PARAGRAPH.
+>>CALL-CONVENTION COBOL
 
 END PROGRAM DB2-FINI.
