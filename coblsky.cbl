@@ -10,7 +10,6 @@ DATA DIVISION.
 WORKING-STORAGE SECTION.
 	
 	COPY dd-network.
-    COPY dd-db2.
 	
 	01 DONE PIC 9 VALUE 0.
 
@@ -18,7 +17,7 @@ PROCEDURE DIVISION.
 
     *> initialize submodules
     CALL "NETWORK-INIT" USING NETWORK-SSL-CONTEXT.
-    CALL "DB2-INIT" USING DB-CONNECTION.
+    CALL "DB2-INIT".
 
     *> network setup
     PERFORM SETUP-HTTPS-SOCKET.
@@ -40,7 +39,7 @@ PROCEDURE DIVISION.
 
     *> shutdown submodules
 	CALL "NETWORK-FINI".
-    CALL "DB2-FINI" USING DB-CONNECTION.
+    CALL "DB2-FINI".
 
 	STOP RUN.
 
