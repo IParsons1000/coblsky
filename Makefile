@@ -56,9 +56,11 @@ SRC += cjson.cbl
 endif
 
 ifeq ($(USE_DB2),1)
-SRC += db2.cbl
+CBLFLAGS += -Idb/db2
+SRC += db/db2/db2.cbl
 else ifeq ($(USE_SQL_EXEC),1)
-SRC += db2.sqb
+CBLFLAGS += -Idb/db2
+SRC += db/db2/db2.sqb
 endif
 
 RM ?= rm -rf

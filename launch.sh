@@ -17,7 +17,7 @@ su - db2inst1 -c "sh" <<EOF
 ~/sqllib/adm/db2start
 ~/sqllib/bin/db2 create database coblsky
 ~/sqllib/bin/db2 connect to COBLSKY
-~/sqllib/bin/db2 -vtf /src/init.sql
+~/sqllib/bin/db2 -vtf /src/db/init.sql
 EOF
 
 # start server
