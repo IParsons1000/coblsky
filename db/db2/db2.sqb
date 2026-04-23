@@ -1,72 +1,74 @@
-*>
-*> (c)2026 Ira Parsons
-*> db2.sqb - db2 database routines (sql exec version)
-*>
+       *>
+       *> (c)2026 Ira Parsons
+       *> db2.sqb - db2 database routines (sql exec version)
+       *>
 
-*>***************************************************************************
-*>* DB2-INIT
-*>*  - Connect to DB2 database
-*>***************************************************************************
+        >>SOURCE FIXED
 
-IDENTIFICATION DIVISION.
-PROGRAM-ID. DB2-INIT.
+       *>***************************************************************************
+       *>* DB2-INIT
+       *>*  - Connect to DB2 database
+       *>***************************************************************************
 
-DATA DIVISION.
-WORKING-STORAGE SECTION.
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. DB2-INIT.
 
-    01 I PIC 9(5) COMP-5. *> int
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
 
-    EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-    COPY dd-db2.
-	EXEC SQL END DECLARE SECTION END-EXEC.
+            01 I PIC 9(5) COMP-5. *> int
 
-PROCEDURE DIVISION.
+            EXEC SQL BEGIN DECLARE SECTION END-EXEC.
+            COPY dd-db2.
+            EXEC SQL END DECLARE SECTION END-EXEC.
 
-    PERFORM INIT-INSTANCE.
+        PROCEDURE DIVISION.
 
-    GOBACK.
+            PERFORM INIT-INSTANCE.
 
-INIT-INSTANCE.
+            GOBACK.
 
-    *> attach to coblsky
-	EXEC SQL
-	    CONNECT TO COBLSKY
-	END-EXEC.
+        INIT-INSTANCE.
 
-    EXIT PARAGRAPH.
+            *> attach to coblsky
+            EXEC SQL
+                CONNECT TO COBLSKY
+            END-EXEC.
 
-END PROGRAM DB2-INIT.
+            EXIT PARAGRAPH.
 
-*>***************************************************************************
-*>* DB2-FINI
-*>*  - Disconnect from DB2 database
-*>***************************************************************************
+        END PROGRAM DB2-INIT.
 
-IDENTIFICATION DIVISION.
-PROGRAM-ID. DB2-FINI.
+       *>***************************************************************************
+       *>* DB2-FINI
+       *>*  - Disconnect from DB2 database
+       *>***************************************************************************
 
-DATA DIVISION.
-WORKING-STORAGE SECTION.
+        IDENTIFICATION DIVISION.
+        PROGRAM-ID. DB2-FINI.
 
-    01 I PIC 9(5) COMP-5. *> int
+        DATA DIVISION.
+        WORKING-STORAGE SECTION.
 
-    EXEC SQL BEGIN DECLARE SECTION END-EXEC.
-    COPY dd-db2.
-	EXEC SQL END DECLARE SECTION END-EXEC.
+            01 I PIC 9(5) COMP-5. *> int
 
-PROCEDURE DIVISION.
+            EXEC SQL BEGIN DECLARE SECTION END-EXEC.
+            COPY dd-db2.
+            EXEC SQL END DECLARE SECTION END-EXEC.
 
-    PERFORM FINI-INSTANCE.
+        PROCEDURE DIVISION.
 
-	GOBACK.
+            PERFORM FINI-INSTANCE.
 
-FINI-INSTANCE.
+            GOBACK.
 
-    *> detach from database
-    EXEC SQL
-	    CONNECT RESET
-	END-EXEC.
+        FINI-INSTANCE.
 
-    EXIT PARAGRAPH.
+            *> detach from database
+            EXEC SQL
+                CONNECT RESET
+            END-EXEC.
 
-END PROGRAM DB2-FINI.
+            EXIT PARAGRAPH.
+
+        END PROGRAM DB2-FINI.
