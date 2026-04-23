@@ -32,7 +32,7 @@ RUN --security=insecure su - db2inst1 -c "sh" <<EOF
 ~/sqllib/adm/db2start
 ~/sqllib/bin/db2 connect to coblsky
 cd /src/db/db2
-~/sqllib/bin/db2 prep db2.sqb bindfile db2.bnd target ansi_cobol CALL_RESOLUTION DEFERRED
+~/sqllib/bin/db2 prep db2.sqb bindfile target ansi_cobol CALL_RESOLUTION DEFERRED
 ~/sqllib/bin/db2 bind /src/db/db2/db2.bnd
 ~/sqllib/bin/db2 connect reset
 ~/sqllib/adm/db2stop
