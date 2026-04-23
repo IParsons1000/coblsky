@@ -5,6 +5,39 @@
 
 # building this as an image necessary for integration with ibm db2 luw ce (only distributed as a docker image)
 
+FROM ibmcom/db2 AS prep
+
+# copy over source folder
+WORKDIR /src
+COPY . .
+
+# create user for db2 instance
+RUN groupadd db2iadm1
+RUN useradd -g db2iadm1 db2inst1
+RUN echo -e "password\npassword" | passwd db2inst1
+
+# setup db
+RUN /opt/ibm/db2/V11.5/instance/db2icrt -u db2inst1 db2inst1
+RUN --security=insecure su - db2inst1 -c "sh" <<EOF
+~/sqllib/adm/db2start
+~/sqllib/bin/db2 create database coblsky
+~/sqllib/bin/db2 connect to coblsky
+~/sqllib/bin/db2 -vtf /src/db/init.sql
+~/sqllib/bin/db2 connect reset
+~/sqllib/adm/db2stop
+EOF
+
+# create sample db and embed sql
+RUN --security=insecure su - db2inst1 -c "sh" <<EOF
+~/sqllib/adm/db2start
+~/sqllib/bin/db2 connect to coblsky
+cd /src/db/db2
+~/sqllib/bin/db2 prep db2.sqb bindfile db2.bnd target ansi_cobol CALL_RESOLUTION DEFERRED
+~/sqllib/bin/db2 bind /src/db/db2/db2.bnd
+~/sqllib/bin/db2 connect reset
+~/sqllib/adm/db2stop
+EOF
+
 FROM fedora:43 AS build
 
 # update system software
@@ -16,11 +49,11 @@ RUN yum update -y glibc-2.42
 RUN yum install -y make gcc-gcobol libgcobol-static openssl openssl-devel cjson-devel
 
 # install libdb2 for linking
-COPY --from=ibmcom/db2 /opt/ibm/db2/V11.5/lib64 /opt/ibm/db2/V11.5/lib64
+COPY --from=prep /opt/ibm/db2/V11.5/lib64 /opt/ibm/db2/V11.5/lib64
 
 # copy over source folder
 WORKDIR /src
-COPY . .
+COPY --from=prep /src .
 
 # build coblsky
 RUN make
@@ -28,7 +61,7 @@ RUN make
 # make ssl keys
 RUN make keygen
 
-FROM ibmcom/db2
+FROM prep AS install
 
 # change repo to latest centos
 RUN sed -i s/mirror.centos.org/vault.centos.org/g /etc/yum.repos.d/centos*
@@ -53,12 +86,12 @@ COPY --from=build /usr/lib64/libstdc++.so.6 /usr/lib64/libstdc++.so.6
 # install coblsky dependencies
 RUN yum install -y openssl3-devel cjson-devel
 
-# install coblsky
-WORKDIR /src
-COPY --from=build /src .
-
 # add db2 libs to ld search path
 RUN echo '/opt/ibm/db2/V11.5/lib64' >> /etc/ld.so.conf
 RUN ldconfig
+
+# install coblsky
+WORKDIR /src
+COPY --from=build /src .
 
 ENTRYPOINT ./launch.sh

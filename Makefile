@@ -10,7 +10,6 @@ CBLC ?= gcobol
 
 USE_CJSON := 1
 USE_DB2 := 1
-USE_SQL_EXEC := 0
 
 CBLFLAGS ?=
 CBLFLAGS += -g -O3
@@ -58,9 +57,6 @@ endif
 ifeq ($(USE_DB2),1)
 CBLFLAGS += -Idb/db2
 SRC += db/db2/db2.cbl
-else ifeq ($(USE_SQL_EXEC),1)
-CBLFLAGS += -Idb/db2
-SRC += db/db2/db2.sqb
 endif
 
 RM ?= rm -rf
@@ -84,7 +80,10 @@ keygen:
 docker: docker-clean docker-build docker-run
 
 docker-build:
-	docker build -t $(PROGRAM) .
+	# insecure building is necessary as an equivalent to --privileged=true for build so that db2start will work
+	docker buildx create --buildkitd-flags '--allow-insecure-entitlement security.insecure' --name coblsky-builder
+	docker buildx use coblsky-builder
+	docker buildx build --allow security.insecure -t $(PROGRAM) .
 
 docker-run:	
 	docker run -itd \
@@ -97,7 +96,9 @@ docker-run:
 
 docker-clean:
 	-docker stop $(PROGRAM)
+	-docker buildx stop coblsky-builder
 	-docker rm -f $(PROGRAM)
+	-docker buildx rm -f coblsky-builder
 
 clean:
 	$(RM) -rf coblsky *.o *.i *.c *.h *.so

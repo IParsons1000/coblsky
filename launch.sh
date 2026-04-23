@@ -6,20 +6,11 @@
 
 set -e
 
-# create user for db2 instance
-groupadd db2iadm1
-useradd -g db2iadm1 db2inst1
-echo -e "$DB2INST1_PASSWORD\n$DB2INST1_PASSWORD" | passwd db2inst1
+# start db2
+su - db2inst1 "~/sqllib/adm/db2start"
 
-# setup db
-/opt/ibm/db2/V11.5/instance/db2icrt -u db2inst1 db2inst1
-su - db2inst1 -c "sh" <<EOF
-~/sqllib/adm/db2start
-~/sqllib/bin/db2 create database coblsky
-~/sqllib/bin/db2 connect to coblsky
-~/sqllib/bin/db2 -vtf /src/db/init.sql
-~/sqllib/bin/db2 connect reset
-EOF
+# set password from env file
+echo -e "$DB2INST1_PASSWORD\n$DB2INST1_PASSWORD" | passwd db2inst1
 
 # start server
 nohup ./coblsky 2&>1 | tee /var/log/coblsky.log
