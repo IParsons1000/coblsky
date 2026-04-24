@@ -3,7 +3,6 @@
        *> dd-db2.cpy - db2 data structures
        *>
 
-            EXEC SQL BEGIN DECLARE SECTION END-EXEC.
             01 SQLCA SYNC.
                 05 SQLCAID      PIC X(8)  VALUE "SQLCA   ".
                 05 SQLCABC      PIC S9(9) COMP-5 VALUE 136.
@@ -26,4 +25,3 @@
                     10 SQLWARN9 PIC X.
                     10 SQLWARNA PIC X.
                 05 SQLSTATE     PIC X(5).
-            EXEC SQL END DECLARE SECTION END-EXEC.
