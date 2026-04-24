@@ -19,6 +19,7 @@ RUN echo -e "password\npassword" | passwd db2inst1
 # setup db
 RUN /opt/ibm/db2/V11.5/instance/db2icrt -u db2inst1 db2inst1
 RUN --security=insecure su - db2inst1 -c "sh" <<EOF
+set -e
 ~/sqllib/adm/db2start
 ~/sqllib/bin/db2 create database coblsky
 ~/sqllib/bin/db2 connect to coblsky
@@ -29,6 +30,7 @@ EOF
 
 # create sample db and embed sql
 RUN --security=insecure su - db2inst1 -c "sh" <<EOF
+set -e
 ~/sqllib/adm/db2start
 ~/sqllib/bin/db2 connect to coblsky
 cd /src/db/db2
