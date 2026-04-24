@@ -7,10 +7,6 @@
 
 FROM ibmcom/db2 AS prep
 
-# copy over source folder
-WORKDIR /src
-COPY . .
-
 # create user for db2 instance
 RUN groupadd db2iadm1
 RUN useradd -g db2iadm1 db2inst1
@@ -28,7 +24,11 @@ set -e
 ~/sqllib/adm/db2stop
 EOF
 
-# create sample db and embed sql
+# copy over source folder
+WORKDIR /src
+COPY . .
+
+# embed and bind sql
 RUN --security=insecure su - db2inst1 -c "sh" <<EOF
 set -e
 ~/sqllib/adm/db2start
