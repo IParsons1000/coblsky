@@ -39,6 +39,7 @@ LDFLAGS += -lcjson
 endif
 
 ifeq ($(USE_DB2),1)
+LDFLAGS += -I/opt/ibm/db2/V11.5/include/cobol_mf
 LDFLAGS += -L/opt/ibm/db2/V11.5/lib64
 LDFLAGS += -lcrypt -ldb2 -ldb2gmf
 endif

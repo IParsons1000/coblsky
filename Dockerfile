@@ -54,6 +54,9 @@ RUN yum install -y make gcc-gcobol libgcobol-static openssl openssl-devel cjson-
 # install libdb2 for linking
 COPY --from=prep /opt/ibm/db2/V11.5/lib64 /opt/ibm/db2/V11.5/lib64
 
+# install db2 include files
+COPY --from=prep /opt/ibm/db2/V11.5/include/cobol_mf /opt/ibm/db2/V11.5/include/cobol_mf
+
 # copy over source folder
 WORKDIR /src
 COPY --from=prep /src .
