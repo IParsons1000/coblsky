@@ -12,6 +12,10 @@ RUN groupadd db2iadm1
 RUN useradd -g db2iadm1 db2inst1
 RUN echo -e "password\npassword" | passwd db2inst1
 
+# copy over source folder
+WORKDIR /src
+COPY . .
+
 # setup db
 RUN /opt/ibm/db2/V11.5/instance/db2icrt -u db2inst1 db2inst1
 RUN --security=insecure su - db2inst1 -c "sh" <<EOF
@@ -23,10 +27,6 @@ set -e
 ~/sqllib/bin/db2 connect reset
 ~/sqllib/adm/db2stop
 EOF
-
-# copy over source folder
-WORKDIR /src
-COPY . .
 
 # embed and bind sql
 RUN --security=insecure su - db2inst1 -c "sh" <<EOF
