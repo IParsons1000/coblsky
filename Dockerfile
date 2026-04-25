@@ -35,6 +35,7 @@ set -e
 ~/sqllib/bin/db2 connect to coblsky
 cd /src/db/db2
 ~/sqllib/bin/db2 prep db2.sqb bindfile target ansi_cobol CALL_RESOLUTION DEFERRED
+sed -i 's/^\(\s\+\)0\([^0-9]*\)$/\1BY VALUE 0\2/' db2.cbl
 ~/sqllib/bin/db2 bind /src/db/db2/db2.bnd
 ~/sqllib/bin/db2 connect reset
 ~/sqllib/adm/db2stop
