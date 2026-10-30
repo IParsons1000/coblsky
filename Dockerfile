@@ -45,7 +45,7 @@ FROM fedora:43 AS build
 
 # update system software
 RUN yum clean all
-RUN yum install -y libstdc++-15.2.1-7.fc43 libxcrypt-compat
+RUN yum install -y libstdc++-15.3.1-1.fc43 libxcrypt-compat
 RUN yum update -y glibc-2.42
 
 # install needed build packages
