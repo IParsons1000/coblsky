@@ -15,8 +15,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
+      timeout-minutes: 30
       run: make docker-build
     - name: Launch the Docker image
+      timeout-minutes: 30
       run: make docker-run
     - name: Kill the Docker image
       run: make docker-clean
